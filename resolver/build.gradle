@@ -1,0 +1,30 @@
+apply plugin: 'java'
+
+group = 'com.github.adrianbk.gradles3'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    jcenter()
+    maven {
+        url "s3://${project.s3Bucket}/maven/SNAPSHOT/"
+        credentials(AwsCredentials) {
+            accessKey project.s3AccessKey
+            secretKey project.s3SecretKey
+        }
+    }
+
+    ivy {
+        url "s3://${project.s3Bucket}/ivy/SNAPSHOT/"
+        credentials(AwsCredentials) {
+            accessKey project.s3AccessKey
+            secretKey project.s3SecretKey
+        }
+    }
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile 'com.github.adrianbk.gradles3:publisher-ivy:1.0-SNAPSHOT'
+    compile 'com.github.adrianbk.gradles3:publisher-maven:1.0-SNAPSHOT'
+}
+

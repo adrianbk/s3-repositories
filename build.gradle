@@ -1,0 +1,25 @@
+apply plugin: 'java'
+repositories {
+    jcenter()
+}
+
+allprojects {
+    ext {
+        s3AccessKey = System.getenv('G_AWS_ACCESS_KEY_ID').toString()
+        s3SecretKey = System.getenv('G_AWS_SECRET_ACCESS_KEY').toString()
+        s3Bucket = System.getenv('G_S3_BUCKET').toString()
+    }
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    testCompile 'junit:junit:4.12'
+}
+
+task smokePublish { Task t ->
+    t.dependsOn "publisher:publishPubPublicationToMavenRepository", "publisher:publishIvyJavaPublicationToIvyRepository"
+}
+
+task smokeResolve { Task t ->
+    t.dependsOn "resolver:test"
+}

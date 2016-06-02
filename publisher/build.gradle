@@ -1,0 +1,48 @@
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+apply plugin: 'ivy-publish'
+
+
+group = 'com.github.adrianbk.gradles3'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    testCompile 'junit:junit:4.12'
+}
+
+publishing {
+    repositories {
+        maven {
+            url "s3://${project.s3Bucket}/maven/SNAPSHOT/"
+            credentials(AwsCredentials) {
+                accessKey project.s3AccessKey
+                secretKey project.s3SecretKey
+            }
+        }
+
+        ivy {
+            url "s3://${project.s3Bucket}/ivy/SNAPSHOT/"
+            credentials(AwsCredentials) {
+                accessKey project.s3AccessKey
+                secretKey project.s3SecretKey
+            }
+        }
+
+        publications {
+            pub(MavenPublication) {
+                from components.java
+                artifactId 'publisher-maven'
+            }
+
+            ivyJava(IvyPublication) {
+                from components.java
+                module 'publisher-ivy'
+            }
+        }
+    }
+}
