@@ -42,6 +42,7 @@ publishing {
             ivyJava(IvyPublication) {
                 from components.java
                 module 'publisher-ivy'
+                revision '1.1.1'
             }
         }
     }
